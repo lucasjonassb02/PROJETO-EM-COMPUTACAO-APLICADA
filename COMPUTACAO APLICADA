@@ -1,0 +1,22 @@
+# PROJETO EM COMPUTACAO APLICADA - Site de Cadastro
+## 📌 Descrição do Projeto
+Este repositório contém o desenvolvimento do projeto prático em COMPUTACAO APLICADA. O objetivo é criar um site de cadastro onde o administrador possa selecionar o que o usuário tem permissão para utilizar dentro do site além cadastrar e logar usuários.
+
+## 🛠️ Tecnologias Utilizadas
+* **Linguagem:** Python
+* **Ferramentas:** Git, GitHub e VS Code
+* **Documentação:** Markdown
+
+## 🚀 Status do Projeto
+- [x] Criação do Repositório
+- [/] Estruturação da Documentação (Em progresso)
+- [ ] Desenvolvimento do Protótipo
+- [ ] Testes Finais
+
+## 📂 Como executar (Em breve)
+O código fonte será disponibilizado nas próximas etapas do cronograma acadêmico.
+
+---
+**Acadêmico:** Jonas Lucas Soares Barros, Lairton Aciole Rufino Barbosa, Kaique Novais Ferreira , Gabriel Gabardo
+**Professor:** Luís Carlos dos Santos Júnior  
+**Instituição:** Universidade Nove de Julho (UNINOVE)

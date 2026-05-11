@@ -75,6 +75,15 @@ def editar(username):
 def logout():
     session.pop('usuario', None)
     return redirect(url_for('login'))
+@app.route('/perfil')
+def perfil():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    username_logado = session['usuario']
+    dados = usuarios_db.get(username_logado)
+    return render_template('perfil.html', usuario=dados)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
+i

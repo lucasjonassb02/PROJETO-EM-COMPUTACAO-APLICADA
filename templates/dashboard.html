@@ -13,22 +13,36 @@
 
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                
+                {% if 'dashboard' in user.permissoes %}
                 <li class="nav-item">
                     <a class="nav-link active" href="/dashboard">Início</a>
                 </li>
+                {% endif %}
 
-                {% if user.cargo == 'admin' %}
+                {% if 'relatorios' in user.permissoes %}
                 <li class="nav-item">
                     <a class="nav-link text-warning fw-bold" href="/relatorios">RELATÓRIOS</a>
                 </li>
+                {% endif %}
+
+                {% if 'usuarios_gestao' in user.permissoes %}
                 <li class="nav-item">
                     <a class="nav-link text-warning fw-bold" href="/usuarios_gestao">USUÁRIOS</a>
                 </li>
                 {% endif %}
 
+                {% if 'permissoes' in user.permissoes %}
+                <li class="nav-item">
+                    <a class="nav-link text-info fw-bold" href="/permissoes">PERMISSÕES</a>
+                </li>
+                {% endif %}
+
+                {% if 'perfil' in user.permissoes %}
                 <li class="nav-item">
                     <a class="nav-link text-warning fw-bold" href="/perfil">PERFIL</a>
                 </li>
+                {% endif %}
             </ul>
 
             <div class="d-flex align-items-center">
@@ -46,7 +60,7 @@
         <div class="col-md-12">
             <div class="p-5 mb-4 bg-white border rounded-3 shadow-sm">
                 <h1 class="display-5 fw-bold text-primary">Olá, {{ user.nome }}!</h1>
-                <p class="fs-4">Você está no **Sistema de Cadastro**. Utilize o menu superior para gerenciar usuários, visualizar relatórios ou editar seu perfil.</p>
+                <p class="fs-4">Você está no <strong>Sistema de Cadastro</strong>. Utilize o menu superior para navegar entre as funções que foram liberadas para você pelo administrador.</p>
             </div>
         </div>
     </div>

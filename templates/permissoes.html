@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Cadastro | Gestão de Acessos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .perm-box {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/dashboard">Sistema de Cadastro</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/dashboard">Voltar ao Início</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="card shadow p-4 border-0">
+            <h2 class="text-primary mb-4 fw-bold">Gestão de Permissões</h2>
+            <p class="text-muted">Defina abaixo quais módulos cada usuário tem autorização para acessar.</p>
+            
+            <table class="table align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Usuário</th>
+                        <th>Cargo</th>
+                        <th>Acessos Liberados (Marque para permitir)</th>
+                        <th class="text-center">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for username, dados in usuarios.items() %}
+                    <tr>
+                        <td>
+                            <div class="fw-bold">{{ dados.nome }}</div>
+                            <small class="text-muted">@{{ username }}</small>
+                        </td>
+                        <td>
+                            <span class="badge {% if dados.cargo == 'admin' %}bg-danger{% else %}bg-primary{% endif %} text-uppercase">
+                                {{ dados.cargo }}
+                            </span>
+                        </td>
+                        <td>
+                            <form method="POST" id="form-{{ username }}" class="d-flex flex-wrap gap-3 perm-box">
+                                <input type="hidden" name="usuario_alvo" value="{{ username }}">
+                                
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="permissoes_selecionadas" value="dashboard" id="dash-{{ username }}" {% if 'dashboard' in dados.permissoes %}checked{% endif %}>
+                                    <label class="form-check-label" for="dash-{{ username }}">Início</label>
+                                </div>
+
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="permissoes_selecionadas" value="relatorios" id="rel-{{ username }}" {% if 'relatorios' in dados.permissoes %}checked{% endif %}>
+                                    <label class="form-check-label" for="rel-{{ username }}">Relatórios</label>
+                                </div>
+
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="permissoes_selecionadas" value="usuarios_gestao" id="gest-{{ username }}" {% if 'usuarios_gestao' in dados.permissoes %}checked{% endif %}>
+                                    <label class="form-check-label" for="gest-{{ username }}">Usuários</label>
+                                </div>
+
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="permissoes_selecionadas" value="permissoes" id="perm-{{ username }}" {% if 'permissoes' in dados.permissoes %}checked{% endif %}>
+                                    <label class="form-check-label" for="perm-{{ username }}">Permissões</label>
+                                </div>
+
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="permissoes_selecionadas" value="perfil" id="perf-{{ username }}" {% if 'perfil' in dados.permissoes %}checked{% endif %}>
+                                    <label class="form-check-label" for="perf-{{ username }}">Perfil</label>
+                                </div>
+                        </td>
+                        <td class="text-center">
+                                <button type="submit" class="btn btn-success fw-bold px-4 shadow-sm">SALVAR</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

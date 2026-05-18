@@ -1,10 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import datetime
+import os 
+from werkzeug.utils import secure_filename 
 
 app = Flask(__name__)
 app.secret_key = 'chave_secreta_projeto_final'
 
-# 1. BANCO DE DADOS (Atualizado com campo 'tema')
+# --- CONFIGURAÇÃO DE UPLOAD DE FOTOS ---
+UPLOAD_FOLDER = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+os.makedirs(UPLOAD_FOLDER, exist_ok=True) 
+
+# 1. BANCO DE DADOS (Unificado com Tema e Foto de Perfil)
 usuarios_db = {
     'admin': {
         'nome': 'Administrador', 
@@ -12,7 +19,8 @@ usuarios_db = {
         'cargo': 'admin', 
         'email': 'admin@teste.com',
         'tema': 'light',
-        'permissoes': ['dashboard', 'relatorios', 'usuarios_gestao', 'permissoes', 'perfil']
+        'permissoes': ['dashboard', 'relatorios', 'usuarios_gestao', 'permissoes', 'perfil'],
+        'foto': 'https://i.pravatar.cc/150?img=11' 
     },
     'teste': {
         'nome': 'Usuario Teste', 
@@ -20,7 +28,8 @@ usuarios_db = {
         'cargo': 'user', 
         'email': 'teste@teste.com',
         'tema': 'light',
-        'permissoes': ['dashboard', 'perfil']
+        'permissoes': ['dashboard', 'perfil'],
+        'foto': 'https://i.pravatar.cc/150?img=12' 
     }
 }
 
@@ -33,7 +42,13 @@ def registrar_log(usuario, acao):
 def tem_permissao(p):
     if 'usuario' not in session:
         return False
+    
     user = usuarios_db.get(session['usuario'])
+    
+    if user is None:
+        session.pop('usuario', None) 
+        return False
+        
     return p in user.get('permissoes', [])
 
 @app.route('/')
@@ -44,6 +59,7 @@ def home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    erro = None
     if request.method == 'POST':
         user_input = request.form.get('usuario')
         senha_input = request.form.get('senha')
@@ -51,8 +67,10 @@ def login():
             session['usuario'] = user_input
             registrar_log(user_input, "Fez login")
             return redirect(url_for('dashboard'))
-        return "Erro! Usuário ou senha incorretos. <a href='/login'>Voltar</a>"
-    return render_template('login.html')
+        
+        erro = "Usuário ou senha incorretos."
+        
+    return render_template('login.html', erro=erro)
 
 @app.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
@@ -64,7 +82,8 @@ def cadastro():
             "email": request.form.get('email'), 
             "cargo": "user",
             "tema": "light",
-            "permissoes": ['dashboard', 'perfil']
+            "permissoes": ['dashboard', 'perfil'], 
+            "foto": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
         }
         registrar_log(user, "Criou conta")
         return redirect(url_for('login'))
@@ -86,6 +105,7 @@ def mudar_tema():
         usuarios_db[username]['tema'] = novo_tema
     return redirect(request.referrer or url_for('dashboard'))
 
+# 4. PAINEL E PERFIL 
 @app.route('/dashboard')
 def dashboard():
     if not tem_permissao('dashboard'):
@@ -93,13 +113,31 @@ def dashboard():
     usuario_dados = usuarios_db.get(session['usuario'])
     return render_template('dashboard.html', user=usuario_dados)
 
-@app.route('/perfil')
+@app.route('/perfil', methods=['GET', 'POST'])
 def perfil():
     if not tem_permissao('perfil'):
-        return "Acesso negado!", 403
-    usuario_dados = usuarios_db.get(session['usuario'])
-    return render_template('perfil.html', user=usuario_dados)
+        return "Acesso negado ao Perfil!", 403
+        
+    username_logado = session['usuario']
+    
+    # SE O USUÁRIO ENVIOU UMA FOTO NOVA:
+    if request.method == 'POST':
+        if 'foto_nova' in request.files:
+            arquivo = request.files['foto_nova']
+            
+            if arquivo.filename != '':
+                nome_seguro = secure_filename(arquivo.filename)
+                caminho_salvo = os.path.join(app.config['UPLOAD_FOLDER'], nome_seguro)
+                arquivo.save(caminho_salvo)
+                usuarios_db[username_logado]['foto'] = f'/{caminho_salvo}'
+                
+                registrar_log(username_logado, "Atualizou a foto de perfil")
+                
+    dados = usuarios_db.get(username_logado)
+    # Mudado de "usuario=dados" para "user=dados" para casar com o perfil.html
+    return render_template('perfil.html', user=dados)
 
+# 5. ADMINISTRAÇÃO 
 @app.route('/relatorios')
 def relatorios():
     if not tem_permissao('relatorios'):
@@ -129,17 +167,23 @@ def permissoes():
             usuarios_db[usuario_alvo]['permissoes'] = novas_permissoes
     return render_template('permissoes.html', usuarios=usuarios_db, user=usuario_logado)
 
+# 6. EDIÇÃO E EXCLUSÃO 
+@app.route('/excluir/<username>')
+def excluir(username):
+    if tem_permissao('usuarios_gestao') and username != 'admin':
+        usuarios_db.pop(username, None)
+    return redirect(url_for('usuarios_gestao'))
+
 @app.route('/editar/<username>', methods=['GET', 'POST'])
 def editar(username):
     if not tem_permissao('usuarios_gestao'):
         return "Acesso negado!", 403
     usuario_dados = usuarios_db.get(session['usuario'])
     if request.method == 'POST':
-        usuarios_db[username].update({
-            'nome': request.form.get('nome'),
-            'email': request.form.get('email'),
-            'senha': request.form.get('senha')
-        })
+        usuarios_db[username]['nome'] = request.form.get('nome')
+        usuarios_db[username]['email'] = request.form.get('email')
+        usuarios_db[username]['senha'] = request.form.get('senha')
+        usuarios_db[username]['foto'] = request.form.get('foto', usuarios_db[username].get('foto'))
         return redirect(url_for('usuarios_gestao'))
     return render_template('editar.html', u=usuarios_db[username], username=username, user=usuario_dados)
 

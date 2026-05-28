@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <div class="container mt-5">
@@ -72,3 +73,75 @@
         }
     });
 </script>
+=======
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Usuários</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        })();
+    </script>
+</head>
+<body class="bg-body-tertiary">
+
+<div class="container mt-5">
+    <div class="card shadow border-0 p-4 rounded-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold m-0"><i class="bi bi-people me-2 text-primary"></i>Gerenciamento de Usuários</h2>
+                <p class="text-muted small mb-0">Controle e edite as contas do sistema</p>
+            </div>
+            <div>
+                <a href="/dashboard" class="btn btn-outline-secondary fw-bold"><i class="bi bi-arrow-left me-1"></i> Voltar</a>
+                <a href="/perfil" class="btn btn-warning fw-bold text-dark ms-2"><i class="bi bi-person me-1"></i> Meu Perfil</a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle table-hover border-top">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nome Real</th>
+                        <th>E-mail</th>
+                        <th>Usuário (Login)</th>
+                        <th>Senha</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user_id, dados in lista.items() %}
+                    <tr>
+                        <td class="fw-semibold">{{ dados.nome }}</td>
+                        <td>{{ dados.email }}</td>
+                        <td><span class="badge bg-secondary">@{{ user_id }}</span></td>
+                        <td><code class="text-muted">••••••••</code></td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="/editar/{{ user_id }}" class="btn btn-sm btn-warning fw-bold px-3"><i class="bi bi-pencil-square me-1"></i>Editar</a>
+                                
+                                {% if user_id != 'admin' %}
+                                <a href="/excluir/{{ user_id }}" 
+                                   class="btn btn-sm btn-danger fw-bold px-3" 
+                                   onclick="return confirm('Tem certeza que deseja excluir este usuário?')"><i class="bi bi-trash me-1"></i>Excluir</a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+>>>>>>> aa7e02ee24491950aad35d4653afd680bececb06

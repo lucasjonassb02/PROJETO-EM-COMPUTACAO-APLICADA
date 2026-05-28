@@ -1,14 +1,62 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<div class="container mt-5" style="max-width: 500px;">
-    <h3>Editando: {{ username }}</h3>
-    <form method="POST" class="card p-4 shadow">
-        <label>Nome Real:</label>
-        <input type="text" name="nome" value="{{ u.nome }}" class="form-control mb-3">
-        <label>Email:</label>
-        <input type="email" name="email" value="{{ u.email }}" class="form-control mb-3">
-        <label>Nova Senha:</label>
-        <input type="text" name="senha" value="{{ u.senha }}" class="form-control mb-3">
-        <button class="btn btn-success w-100">Salvar Alterações</button>
-        <a href="/usuarios_gestao" class="btn btn-link w-100 mt-2">Cancelar</a>
-    </form>
-</div>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuário</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        })();
+    </script>
+</head>
+<body class="bg-body-tertiary d-flex align-items-center vh-100">
+    <div class="container" style="max-width: 500px;">
+        <div class="card p-4 shadow border-0 rounded-4">
+            <div class="mb-3 text-center">
+                <div class="bg-warning bg-opacity-10 text-warning d-inline-block p-3 rounded-circle mb-2">
+                    <i class="bi bi-pencil-square fs-3"></i>
+                </div>
+                <h4 class="fw-bold">Editando: <span class="text-primary">@{{ username }}</span></h4>
+            </div>
+            
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Nome Real</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input type="text" name="nome" value="{{ u.nome }}" class="form-control" placeholder="Nome Completo" required>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="email" name="email" value="{{ u.email }}" class="form-control" placeholder="seu@email.com" required>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Nova Senha</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        <input type="password" name="senha" class="form-control" placeholder="Deixe em branco para manter a atual" minlength="6">
+                    </div>
+                    <div class="form-text text-muted small">Por motivos de segurança, a senha atual não é exibida.</div>
+                </div>
+                
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-success fw-bold py-2"><i class="bi bi-cloud-check me-2"></i>Salvar Alterações</button>
+                    <a href="/usuarios_gestao" class="btn btn-outline-secondary fw-bold py-2">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

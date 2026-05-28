@@ -23,24 +23,69 @@
             
             <div class="text-center mb-4">
                 <form method="POST" enctype="multipart/form-data">
-                    
                     <label for="upload-foto" title="Clique para trocar de foto">
                         <img src="{{ usuario.foto }}" 
                              alt="Foto de Perfil" 
                              class="rounded-circle shadow mb-2 foto-clicavel border border-3 border-white" 
                              style="width: 120px; height: 120px; object-fit: cover;">
                     </label>
-                    
                     <p class="text-muted" style="font-size: 0.85rem;">Clique na foto para alterar</p>
-
                     <input type="file" id="upload-foto" name="foto_nova" accept="image/*" style="display: none;" onchange="this.form.submit()">
-                    
                 </form>
             </div>
-            <p><strong>Nome de Usuário:</strong> {{ usuario.nome if usuario else session['usuario'] }}</p>
+            
+            {% set nome_atual = usuario.nome if usuario else session['usuario'] %}
+            {% set email_atual = usuario.email if usuario else session.get('email', '') %}
+            
+            <p><strong>Nome de Usuário:</strong> {{ nome_atual }}</p>
+            <p><strong>E-mail:</strong> {{ email_atual if email_atual else 'Não informado' }}</p>
             <p><strong>Status da Conta:</strong> <span class="badge bg-success">Ativo</span></p>
-            <a href="/dashboard" class="btn btn-outline-secondary w-100 mt-3">Voltar ao Painel</a>
+            
+            <button type="button" class="btn btn-warning w-100 mt-3" data-bs-toggle="modal" data-bs-target="#modalEditarPerfil">
+                Editar Dados / Alterar Senha
+            </button>
+            
+            <a href="/dashboard" class="btn btn-outline-secondary w-100 mt-2">Voltar ao Painel</a>
         </div>
     </div>
+
+    <div class="modal fade" id="modalEditarPerfil" tabindex="-1" aria-labelledby="modalEditarPerfilLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarPerfilLabel">Editar Informações do Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <form action="/editar-perfil" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="inputNome" class="form-label fw-bold">Nome de Usuário</label>
+                            <input type="text" class="form-control" id="inputNome" name="nome" value="{{ nome_atual }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="inputEmail" class="form-label fw-bold">E-mail</label>
+                            <input type="email" class="form-control" id="inputEmail" name="email" value="{{ email_atual }}" required>
+                        </div>
+                        
+                        <hr>
+                        <h6 class="text-danger fw-bold">Alterar Senha (Opcional)</h6>
+                        <p class="text-muted" style="font-size: 0.8rem;">Deixe os campos em branco se não quiser mudar a senha atual.</p>
+                        
+                        <div class="mb-3">
+                            <label for="inputSenha" class="form-label">Nova Senha</label>
+                            <input type="password" class="form-control" id="inputSenha" name="nova_senha" placeholder="Digite a nova senha">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

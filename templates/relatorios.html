@@ -1,8 +1,29 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <div class="container mt-5">
     <h2>Relatório de Atividade</h2>
     <a href="/dashboard" class="btn btn-secondary mb-3">Voltar</a>
-    <table class="table table-striped border">
+
+    <div class="row g-3 mb-4 bg-light p-3 rounded border">
+        <div class="col-md-6">
+            <label for="inputBusca" class="form-label fw-bold">Buscar por Usuário ou Ação</label>
+            <input type="text" id="inputBusca" class="form-control" placeholder="Digite para buscar...">
+        </div>
+        <div class="col-md-6">
+            <label for="selectAcao" class="form-label fw-bold">Filtrar por Tipo de Ação</label>
+            <select id="selectAcao" class="form-select">
+                <option value="">Todas as ações</option>
+                <option value="Fez login">Fez login</option>
+                <option value="Fez logout">Fez logout</option>
+                <option value="Criou conta">Criou conta</option>
+                <option value="Editou os dados de perfil">Editou os dados de perfil</option>
+                <option value="Alterou a própria senha">Alterou a própria senha</option>
+                <option value="	Atualizou a foto de perfil">	Atualizou a foto de perfil</option>
+            </select>
+        </div>
+    </div>
+
+    <table class="table table-striped border" id="tabelaLogs">
         <thead class="table-dark">
             <tr>
                 <th>Usuário</th>
@@ -13,14 +34,44 @@
         <tbody>
             {% for log in logs|reverse %}
             <tr>
-                <td>{{ log.usuario }}</td>
-                <td>{{ log.acao }}</td>
+                <td class="col-usuario">{{ log.usuario }}</td>
+                <td class="col-acao">{{ log.acao }}</td>
                 <td>{{ log.data_hora }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+
 <li class="nav-item">
     <a class="nav-link text-warning" href="/perfil">PERFIL</a>
 </li>
+
+<script>
+    const inputBusca = document.getElementById('inputBusca');
+    const selectAcao = document.getElementById('selectAcao');
+    const tabela = document.getElementById('tabelaLogs').getElementsByTagName('tbody')[0];
+    const linhas = tabela.getElementsByTagName('tr');
+
+    function filtrarTabela() {
+        const termoBusca = inputBusca.value.toLowerCase();
+        const acaoSelecionada = selectAcao.value.toLowerCase();
+
+        for (let i = 0; i < linhas.length; i++) {
+            const linha = linhas[i];
+            const textoUsuario = linha.querySelector('.col-usuario').textContent.toLowerCase();
+            const textoAcao = linha.querySelector('.col-acao').textContent.toLowerCase();
+            const bateBusca = textoUsuario.includes(termoBusca) || textoAcao.includes(termoBusca);
+            const bateAcao = acaoSelecionada === "" || textoAcao.trim() === acaoSelecionada.trim();
+
+            if (bateBusca && bateAcao) {
+                linha.style.display = '';
+            } else {
+                linha.style.display = 'none';
+            }
+        }
+    }
+
+    inputBusca.addEventListener('keyup', filtrarTabela);
+    selectAcao.addEventListener('change', filtrarTabela);
+</script>

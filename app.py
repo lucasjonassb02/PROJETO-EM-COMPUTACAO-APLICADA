@@ -107,6 +107,35 @@ def dashboard():
     usuario_dados = usuarios_db.get(session['usuario'])
     return render_template('dashboard.html', user=usuario_dados)
 
+@app.route('/editar-perfil', methods=['POST'])
+def editar_perfil():
+    # Pega o login (ex: 'admin' ou 'cujeio') salvo na sessão
+    usuario_logado = session.get('usuario') 
+    
+    if not usuario_logado:
+        return redirect('/login')
+
+    novo_nome = request.form.get('nome')
+    novo_email = request.form.get('email')
+    nova_senha = request.form.get('nova_senha')
+
+    if usuario_logado in usuarios_db: 
+        # Modifica as informações no banco de dados fictício usando a variável correta
+        usuarios_db[usuario_logado]['nome'] = novo_nome
+        usuarios_db[usuario_logado]['email'] = novo_email
+        
+        # Altera a senha somente se o usuário tiver digitado algo
+        if nova_senha and nova_senha.strip() != "":
+            usuarios_db[usuario_logado]['senha'] = nova_senha
+            registrar_log(usuario_logado, "Alterou a própria senha")
+        else:
+            registrar_log(usuario_logado, "Editou os dados de perfil")
+
+    # Mantemos session['usuario'] intacto com o login e atualizamos apenas o email se necessário
+    session['email'] = novo_email
+
+    return redirect('/perfil')
+
 @app.route('/perfil', methods=['GET', 'POST'])
 def perfil():
     if not tem_permissao('perfil'):
@@ -114,7 +143,6 @@ def perfil():
         
     username_logado = session['usuario']
     
-    # SE O USUÁRIO ENVIOU UMA FOTO NOVA:
     if request.method == 'POST':
         if 'foto_nova' in request.files:
             arquivo = request.files['foto_nova']

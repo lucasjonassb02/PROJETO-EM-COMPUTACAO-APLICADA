@@ -28,12 +28,13 @@
             <p class="text-muted small">Preencha os dados abaixo para começar</p>
         </div>
         
-        <form method="POST" class="needs-validation" novalidate>
+        <form method="POST" action="" class="needs-validation" novalidate>
             <div class="mb-3">
                 <label class="form-label small fw-bold">Nome Completo</label>
                 <div class="input-group has-validation">
                     <span class="input-group-text"><i class="bi bi-person"></i></span>
                     <input type="text" name="nome" id="nomeInput" class="form-control" placeholder="Ex: Lucas Silva" required minlength="3">
+                    <div class="invalid-feedback">O nome deve conter pelo menos 3 caracteres.</div>
                 </div>
             </div>
             
@@ -42,6 +43,7 @@
                 <div class="input-group has-validation">
                     <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                     <input type="email" name="email" id="emailInput" class="form-control" placeholder="seu@email.com" required>
+                    <div class="invalid-feedback">Por favor, insira um e-mail válido.</div>
                 </div>
             </div>
             
@@ -50,15 +52,17 @@
                 <div class="input-group has-validation">
                     <span class="input-group-text"><i class="bi bi-at"></i></span>
                     <input type="text" name="usuario" id="userInput" class="form-control" placeholder="Ex: lucas123" required minlength="4">
+                    <div class="invalid-feedback">O usuário precisa ter 4 ou mais caracteres.</div>
                 </div>
             </div>
             
             <div class="mb-3">
                 <label class="form-label small fw-bold">Senha</label>
-                <div class="input-group">
+                <div class="input-group has-validation">
                     <span class="input-group-text"><i class="bi bi-lock"></i></span>
                     <input type="password" name="senha" id="senhaInput" class="form-control" placeholder="Mínimo 6 caracteres" required minlength="6">
                     <span class="input-group-text" onclick="togglePasswordVisibility()"><i class="bi bi-eye" id="toggleIcon"></i></span>
+                    <div class="invalid-feedback">A senha deve ter no mínimo 6 caracteres.</div>
                 </div>
                 <div class="progress mt-2" style="height: 5px;">
                     <div id="strengthBar" class="progress-bar password-strength-bar" role="progressbar"></div>
@@ -66,7 +70,7 @@
                 <small id="strengthText" class="form-text text-muted small"></small>
             </div>
             
-            <button class="btn btn-success w-100 fw-bold py-2 mb-3 shadow-sm"><i class="bi bi-check-circle me-2"></i>Finalizar Cadastro</button>
+            <button type="submit" class="btn btn-success w-100 fw-bold py-2 mb-3 shadow-sm"><i class="bi bi-check-circle me-2"></i>Finalizar Cadastro</button>
         </form>
         
         <div class="text-center border-top pt-3">
@@ -87,7 +91,6 @@
             }
         }
 
-        // Validação Visual Dinâmica e Força de Senha
         document.addEventListener('DOMContentLoaded', () => {
             const inputs = document.querySelectorAll('.form-control');
             inputs.forEach(input => {

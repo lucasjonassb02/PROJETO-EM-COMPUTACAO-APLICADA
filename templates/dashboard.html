@@ -31,10 +31,18 @@
         .theme-toggle-btn:hover { background: #333; border-color: #666; }
     </style>
     <script>
+        // Otimização de renderização rápida: evita flickers de ícone e cor de fundo
         (function() {
             const savedTheme = localStorage.getItem('theme') || "{{ user.tema if user and user.tema else 'light' }}";
             document.documentElement.setAttribute('data-bs-theme', savedTheme);
             localStorage.setItem('theme', savedTheme);
+            
+            // Adiciona uma regra temporária antes do DOM carregar para o ícone correto aparecer
+            const style = document.createElement('style');
+            style.innerHTML = savedTheme === 'dark' 
+                ? '.theme-toggle-btn i::before { content: "\\f494" !important; }' // código unicode da lua
+                : '.theme-toggle-btn i::before { content: "\\f5aba" !important; }'; // código unicode do sol
+            document.head.appendChild(style);
         })();
     </script>
 </head>

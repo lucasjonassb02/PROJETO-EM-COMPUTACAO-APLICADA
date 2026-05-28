@@ -23,12 +23,12 @@
                 <h4 class="fw-bold">Editando: <span class="text-primary">@{{ username }}</span></h4>
             </div>
             
-            <form method="POST">
+            <form method="POST" action="">
                 <div class="mb-3">
                     <label class="form-label small fw-bold">Nome Real</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-person"></i></span>
-                        <input type="text" name="nome" value="{{ u.nome }}" class="form-control" required>
+                        <input type="text" name="nome" value="{{ u.nome }}" class="form-control" placeholder="Nome Completo" required>
                     </div>
                 </div>
                 
@@ -36,7 +36,7 @@
                     <label class="form-label small fw-bold">Email</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                        <input type="email" name="email" value="{{ u.email }}" class="form-control" required>
+                        <input type="email" name="email" value="{{ u.email }}" class="form-control" placeholder="seu@email.com" required>
                     </div>
                 </div>
                 
@@ -44,12 +44,13 @@
                     <label class="form-label small fw-bold">Nova Senha</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        <input type="text" name="senha" value="{{ u.senha }}" class="form-control" required>
+                        <input type="password" name="senha" class="form-control" placeholder="Deixe em branco para manter a atual" minlength="6">
                     </div>
+                    <div class="form-text text-muted small">Por motivos de segurança, a senha atual não é exibida.</div>
                 </div>
                 
                 <div class="d-grid gap-2 mt-4">
-                    <button class="btn btn-success fw-bold py-2"><i class="bi bi-cloud-check me-2"></i>Salvar Alterações</button>
+                    <button type="submit" class="btn btn-success fw-bold py-2"><i class="bi bi-cloud-check me-2"></i>Salvar Alterações</button>
                     <a href="/usuarios_gestao" class="btn btn-outline-secondary fw-bold py-2">Cancelar</a>
                 </div>
             </form>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br" id="html-togle">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil | Configurações</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || "{{ user.tema if user and user.tema else 'light' }}";
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        })();
+    </script>
+</head>
+<body class="bg-body-tertiary d-flex align-items-center vh-100">
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow border-0 p-4 rounded-4">
+                
+                <h2 class="text-primary text-center fw-bold mb-3">Minha Conta</h2>
+                <hr>
+
+                <div class="text-center mb-4">
+                    <form method="POST" enctype="multipart/form-data" action="/alterar_foto">
+                        <label for="upload-foto" title="Clique para trocar de foto" style="cursor: pointer;">
+                            <img src="{{ user.foto }}" 
+                                 alt="Foto de Perfil" 
+                                 class="rounded-circle shadow mb-2 foto-clicavel border border-3 border-white" 
+                                 style="width: 120px; height: 120px; object-fit: cover;">
+                        </label>
+                        <p class="text-muted" style="font-size: 0.85rem;">Clique na foto para alterar</p>
+                        <input type="file" id="upload-foto" name="foto_nova" accept="image/*" style="display: none;" onchange="this.form.submit()">
+                    </form>
+                </div>
+                
+                <div class="text-center mb-4">
+                    <div class="bg-primary bg-opacity-10 text-primary d-inline-block p-3 rounded-circle mb-2">
+                        <i class="bi bi-person-gear fs-3"></i>
+                    </div>
+                    <h3 class="fw-bold m-0">O Meu Perfil</h3>
+                    <p class="text-muted small">Gerencie suas preferências de usuário</p>
+                </div>
+                
+                <div class="p-3 bg-light bg-opacity-50 rounded-3 mb-4 border">
+                    <p class="mb-2"><strong><i class="bi bi-card-text me-2 text-muted"></i>Nome:</strong> {{ user.nome }}</p>
+                    <p class="mb-2"><strong><i class="bi bi-envelope me-2 text-muted"></i>Email:</strong> {{ user.email }}</p>
+                    <p class="mb-0"><strong><i class="bi bi-shield-check me-2 text-muted"></i>Status:</strong> <span class="badge bg-success">Ativo</span></p>
+                </div>
+
+                <h5 class="fw-bold mb-3 small text-uppercase text-muted tracking-wider"><i class="bi bi-palette me-2"></i>Aparência</h5>
+                
+                <form action="/mudar_tema" method="POST" onsubmit="salvarTemaLocal()">
+                    <div class="mb-4">
+                        <select name="tema" id="temaSelect" class="form-select form-select-lg" onchange="previewTema(this.value)">
+                            <option value="light">☀️ Modo Claro</option>
+                            <option value="dark">🌙 Modo Escuro</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold fs-6 shadow-sm mb-3">
+                        <i class="bi bi-check2-circle me-1"></i> Salvar Preferência
+                    </button>
+                </form>
+
+                <button type="button" class="btn btn-warning w-100 fw-bold shadow-sm mb-2" data-bs-toggle="modal" data-bs-target="#modalEditarPerfil">
+                    <i class="bi bi-pencil-square me-1"></i> Editar Dados / Alterar Senha
+                </button>
+                
+                <div class="text-center mt-3">
+                    <a href="/dashboard" class="text-decoration-none text-muted small">
+                        <i class="bi bi-arrow-left me-1"></i> Voltar ao Painel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditarPerfil" tabindex="-1" aria-labelledby="modalEditarPerfilLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title id="modalEditarPerfilLabel">Editar Informações do Perfil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <form action="/editar-perfil" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="inputNome" class="form-label fw-bold">Nome de Usuário</label>
+                        <input type="text" class="form-control" id="inputNome" name="nome" value="{{ user.nome }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="inputEmail" class="form-label fw-bold">E-mail</label>
+                        <input type="type" class="form-control" id="inputEmail" name="email" value="{{ user.email }}" required>
+                    </div>
+                    
+                    <hr>
+                    <h6 class="text-danger fw-bold">Alterar Senha (Opcional)</h6>
+                    <p class="text-muted" style="font-size: 0.8rem;">Deixe os campos em branco se não quiser mudar a senha atual.</p>
+                    
+                    <div class="mb-3">
+                        <label for="inputSenha" class="form-label">Nova Senha</label>
+                        <input type="password" class="form-control" id="inputSenha" name="nova_senha" placeholder="Digite a nova senha">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function previewTema(tema) {
+        document.documentElement.setAttribute('data-bs-theme', tema);
+    }
+
+    function salvarTemaLocal() {
+        const temaSelecionado = document.getElementById('temaSelect').value;
+        localStorage.setItem('theme', temaSelecionado);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+        const select = document.getElementById('temaSelect');
+        if(select) select.value = currentTheme;
+    });
+</script>
+</body>
+</html>

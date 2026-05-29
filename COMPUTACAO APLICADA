@@ -1,0 +1,28 @@
+# PROJETO EM COMPUTACAO APLICADA - Site de Cadastro
+## 📌 Descrição do Projeto
+Este repositório contém o desenvolvimento do projeto prático em COMPUTACAO APLICADA. O objetivo é criar um site de cadastro onde o administrador possa selecionar o que o usuário tem permissão para utilizar dentro do site além cadastrar e logar usuários.
+
+## 🛠️ Tecnologias Utilizadas
+* **Linguagem:** Python
+* **Ferramentas:** Git, GitHub e VS Code
+* **Documentação:** Markdown
+
+## 🚀 Status do Projeto
+- [x] Criação do Repositório
+- [X] Estruturação da Documentação (Em progresso)
+- [X] Desenvolvimento do Protótipo
+- [ ] Testes Finais
+
+## 📂 Como executar 
+
+1. Clone o repositório: `git clone https://github.com/lucasjonassb02/PROJETO-EM-COMPUTACAO-APLICADA.git`
+2. Crie um ambiente virtual: `python -m venv venv`
+3. Ative o venv: `.\venv\Scripts\activate` (Windows)
+4. Instale as dependências: `pip install flask flask-sqlalchemy`
+5. Execute o projeto: `python app.py`
+6. Acesse: `http://127.0.0.1:5000`
+
+---
+**Acadêmico:** Jonas Lucas Soares Barros, Lairton Aciole Rufino Barbosa, Kaique Novais Ferreira , Gabriel Gabardo
+**Professor:** Luís Carlos dos Santos Júnior  
+**Instituição:** Universidade Nove de Julho (UNINOVE)
